@@ -24,7 +24,7 @@ import com.atguigu.gmall.pms.service.SkuImagesService;
  *
  * @author lixianfeng
  * @email lxf@atguigu.com
- * @date 2020-03-07 16:24:30
+ * @date 2020-03-07 17:35:08
  */
 @Api(tags = "sku图片 管理")
 @RestController
