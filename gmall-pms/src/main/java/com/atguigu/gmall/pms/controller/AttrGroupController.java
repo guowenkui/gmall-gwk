@@ -44,6 +44,13 @@ public class AttrGroupController {
     }
 
 
+    @GetMapping("/withattrs/cat/{catId}")
+    public Resp<List<GroupVO>> queryGroupWithAttrsByCid(@PathVariable("catId")Long cid){
+        List<GroupVO> groupVOS = this.attrGroupService.queryGroupWithAttrsByCid(cid);
+        return Resp.ok(groupVOS);
+    }
+
+
     @GetMapping("{catId}")
     public Resp<PageVo> queryGroupPage(QueryCondition condition,@PathVariable("catId") Long catId){
         PageVo page = this.attrGroupService.queryGroupPage(condition,catId);
