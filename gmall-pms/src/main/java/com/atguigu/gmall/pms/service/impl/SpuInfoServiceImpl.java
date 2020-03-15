@@ -4,13 +4,16 @@ import com.atguigu.gmall.pms.dao.ProductAttrValueDao;
 import com.atguigu.gmall.pms.dao.SkuInfoDao;
 import com.atguigu.gmall.pms.dao.SpuInfoDescDao;
 import com.atguigu.gmall.pms.entity.*;
+import com.atguigu.gmall.pms.feign.GmallSmsClient;
 import com.atguigu.gmall.pms.service.ProductAttrValueService;
 import com.atguigu.gmall.pms.service.SkuImagesService;
 import com.atguigu.gmall.pms.service.SkuSaleAttrValueService;
 import com.atguigu.gmall.pms.vo.BaseAttrVO;
 import com.atguigu.gmall.pms.vo.SkuInfoVO;
+import com.atguigu.gmall.pms.vo.SkuSaleVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +53,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private SkuSaleAttrValueService saleAttrValueService;
+
+    @Autowired
+    private GmallSmsClient gmallSmsClient;
 
 
     @Override
@@ -156,10 +162,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 this.saleAttrValueService.saveBatch(salAttrs);
             }
 
-            //3.保存营销信息的3张表
+            //3.保存营销信息的3张表(feign远程调用sms保存)
             //3.1保存sms_sku_bounds
             //3.2保存sms_sku_ladder
             //3.3保存sms_sku_full_reduction
+
+            SkuSaleVO skuSaleVO = new SkuSaleVO();
+            BeanUtils.copyProperties(skuInfoVO,skuSaleVO);
+            skuSaleVO.setSkuId(skuId);
+            this.gmallSmsClient.saveSale(skuSaleVO);
 
         });
     }
