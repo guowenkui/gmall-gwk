@@ -11,5 +11,5 @@ public class SpuInfoVO  extends SpuInfoEntity {
 
     private List<String> spuImages;
     private List<BaseAttrVO> baseAttrs;
-    private List<?> skus;
+    private List<SkuInfoVO> skus;
 }
