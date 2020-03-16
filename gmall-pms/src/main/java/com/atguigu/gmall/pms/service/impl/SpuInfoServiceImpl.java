@@ -97,7 +97,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void bigSave(SpuInfoVO spuInfoVO) throws FileNotFoundException {
         //1.保存spu相关的3张表
         //1.1 保存pms_spu_info信息
@@ -121,6 +121,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         //2.保存sku相关的3张表
         saveSkuAndSale(spuInfoVO, spuId);
+
+        int i=1/0;
+
     }
 
     private void saveSkuAndSale(SpuInfoVO spuInfoVO, Long spuId) {
