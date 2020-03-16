@@ -4,9 +4,7 @@ import com.atguigu.gmall.pms.dao.SkuInfoDao;
 import com.atguigu.gmall.pms.dao.SpuInfoDescDao;
 import com.atguigu.gmall.pms.entity.*;
 import com.atguigu.gmall.pms.feign.GmallSmsClient;
-import com.atguigu.gmall.pms.service.ProductAttrValueService;
-import com.atguigu.gmall.pms.service.SkuImagesService;
-import com.atguigu.gmall.pms.service.SkuSaleAttrValueService;
+import com.atguigu.gmall.pms.service.*;
 import com.atguigu.gmall.pms.vo.BaseAttrVO;
 import com.atguigu.gmall.pms.vo.SkuInfoVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
@@ -29,7 +27,8 @@ import com.atguigu.core.bean.Query;
 import com.atguigu.core.bean.QueryCondition;
 
 import com.atguigu.gmall.pms.dao.SpuInfoDao;
-import com.atguigu.gmall.pms.service.SpuInfoService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 
@@ -51,6 +50,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private SkuSaleAttrValueService saleAttrValueService;
+
+
+    @Autowired
+    private SpuInfoDescService spuInfoDescService;
 
     @Autowired
     private GmallSmsClient gmallSmsClient;
@@ -89,37 +92,25 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     }
 
     @Override
+    @Transactional
     public void bigSave(SpuInfoVO spuInfoVO) {
         //1.保存spu相关的3张表
         //1.1 保存pms_spu_info信息
-        spuInfoVO.setCreateTime(new Date());
-        spuInfoVO.setUodateTime(spuInfoVO.getCreateTime());
-        this.save(spuInfoVO);
-
-        Long spuId = spuInfoVO.getId();
+        Long spuId = saveSpuInfo(spuInfoVO);
 
         //1.2保存pms_spu_info_desc
-        List<String> spuImages = spuInfoVO.getSpuImages();
-        if (!CollectionUtils.isEmpty(spuImages)){
-            SpuInfoDescEntity descEntity = new SpuInfoDescEntity();
-            descEntity.setSpuId(spuId);
-            descEntity.setDecript(StringUtils.join(spuImages,","));
-            this.descDao.insert(descEntity);
-        }
-        //1.3 保存pms_product_attr_value
-        List<BaseAttrVO> baseAttrs = spuInfoVO.getBaseAttrs();
-        if (!CollectionUtils.isEmpty(baseAttrs)){
-            List<ProductAttrValueEntity> productAttrValueEntities = baseAttrs.stream().map(baseAttrVO ->{
-                ProductAttrValueEntity attrValueEntity = baseAttrVO;
-                attrValueEntity.setSpuId(spuId);
-                return  attrValueEntity;
-            }
+        this.spuInfoDescService.saveSpuInfoDesc(spuInfoVO, spuId);
 
-            ).collect(Collectors.toList());
-            this.productAttrValueService.saveBatch(productAttrValueEntities);
-        }
+        int i=1/0;
+
+        //1.3 保存pms_product_attr_value
+        saveBaseAttrValue(spuInfoVO, spuId);
 
         //2.保存sku相关的3张表
+        saveSkuAndSale(spuInfoVO, spuId);
+    }
+
+    private void saveSkuAndSale(SpuInfoVO spuInfoVO, Long spuId) {
         List<SkuInfoVO> skus = spuInfoVO.getSkus();
         if (CollectionUtils.isEmpty(skus)){
             return;
@@ -171,6 +162,28 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             this.gmallSmsClient.saveSale(skuSaleVO);
 
         });
+    }
+
+    private void saveBaseAttrValue(SpuInfoVO spuInfoVO, Long spuId) {
+        List<BaseAttrVO> baseAttrs = spuInfoVO.getBaseAttrs();
+        if (!CollectionUtils.isEmpty(baseAttrs)){
+            List<ProductAttrValueEntity> productAttrValueEntities = baseAttrs.stream().map(baseAttrVO ->{
+                ProductAttrValueEntity attrValueEntity = baseAttrVO;
+                attrValueEntity.setSpuId(spuId);
+                return  attrValueEntity;
+            }
+
+            ).collect(Collectors.toList());
+            this.productAttrValueService.saveBatch(productAttrValueEntities);
+        }
+    }
+
+    private Long saveSpuInfo(SpuInfoVO spuInfoVO) {
+        spuInfoVO.setCreateTime(new Date());
+        spuInfoVO.setUodateTime(spuInfoVO.getCreateTime());
+        this.save(spuInfoVO);
+
+        return spuInfoVO.getId();
     }
 
 }
