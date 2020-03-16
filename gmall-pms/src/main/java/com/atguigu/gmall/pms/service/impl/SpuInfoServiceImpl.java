@@ -1,6 +1,5 @@
 package com.atguigu.gmall.pms.service.impl;
 
-import com.atguigu.gmall.pms.dao.ProductAttrValueDao;
 import com.atguigu.gmall.pms.dao.SkuInfoDao;
 import com.atguigu.gmall.pms.dao.SpuInfoDescDao;
 import com.atguigu.gmall.pms.entity.*;
@@ -10,8 +9,8 @@ import com.atguigu.gmall.pms.service.SkuImagesService;
 import com.atguigu.gmall.pms.service.SkuSaleAttrValueService;
 import com.atguigu.gmall.pms.vo.BaseAttrVO;
 import com.atguigu.gmall.pms.vo.SkuInfoVO;
-import com.atguigu.gmall.pms.vo.SkuSaleVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
+import com.atguigu.gmall.sms.vo.SkuSaleVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
