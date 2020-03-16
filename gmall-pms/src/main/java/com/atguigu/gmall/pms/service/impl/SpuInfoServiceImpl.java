@@ -9,6 +9,7 @@ import com.atguigu.gmall.pms.vo.BaseAttrVO;
 import com.atguigu.gmall.pms.vo.SkuInfoVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import com.atguigu.gmall.sms.vo.SkuSaleVO;
+import com.mysql.jdbc.TimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -95,7 +97,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     }
 
     @Override
-    @Transactional(noRollbackFor = ArithmeticException.class ,rollbackFor = FileNotFoundException.class)
+    @Transactional(readOnly = true)
     public void bigSave(SpuInfoVO spuInfoVO) throws FileNotFoundException {
         //1.保存spu相关的3张表
         //1.1 保存pms_spu_info信息
@@ -106,7 +108,13 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
 //        new FileInputStream(new File("xxxxx"));
 
-        int i=1/0;
+//        int i=1/0;
+
+//        try {
+//            TimeUnit.SECONDS.sleep(4);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         //1.3 保存pms_product_attr_value
         saveBaseAttrValue(spuInfoVO, spuId);
