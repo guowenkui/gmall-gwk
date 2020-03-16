@@ -14,6 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -92,14 +95,16 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     }
 
     @Override
-    @Transactional
-    public void bigSave(SpuInfoVO spuInfoVO) {
+    @Transactional(noRollbackFor = ArithmeticException.class ,rollbackFor = FileNotFoundException.class)
+    public void bigSave(SpuInfoVO spuInfoVO) throws FileNotFoundException {
         //1.保存spu相关的3张表
         //1.1 保存pms_spu_info信息
         Long spuId = saveSpuInfo(spuInfoVO);
 
         //1.2保存pms_spu_info_desc
         this.spuInfoDescService.saveSpuInfoDesc(spuInfoVO, spuId);
+
+//        new FileInputStream(new File("xxxxx"));
 
         int i=1/0;
 
