@@ -10,6 +10,7 @@ import com.atguigu.gmall.pms.vo.SkuInfoVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import com.atguigu.gmall.sms.vo.SkuSaleVO;
 import com.mysql.jdbc.TimeUtil;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     }
 
     @Override
-    @Transactional
+    @GlobalTransactional
     public void bigSave(SpuInfoVO spuInfoVO) throws FileNotFoundException {
         //1.保存spu相关的3张表
         //1.1 保存pms_spu_info信息
