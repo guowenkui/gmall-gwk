@@ -123,7 +123,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         //2.保存sku相关的3张表
         saveSkuAndSale(spuInfoVO, spuId);
 
-        int i=1/0;
+//        int i=1/0;
 
     }
 

@@ -2,6 +2,7 @@ package com.atguigu.gmall.pms.controller;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -40,6 +41,14 @@ public class SpuInfoController {
     public Resp<PageVo> querySpuPage(QueryCondition condition,@RequestParam("catId")Long cid){
         PageVo pageVo = this.spuInfoService.querySpuPage(condition,cid);
         return Resp.ok(pageVo);
+    }
+
+    @PostMapping("page")
+    public Resp<List<SpuInfoEntity>> querySpusByPage(@RequestBody QueryCondition queryCondition){
+
+        PageVo page = this.spuInfoService.queryPage(queryCondition);
+        List<SpuInfoEntity> list = (List<SpuInfoEntity>)page.getList();
+        return Resp.ok(list);
     }
     /**
      * 列表

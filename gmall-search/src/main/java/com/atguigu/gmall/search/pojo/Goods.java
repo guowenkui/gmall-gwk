@@ -30,8 +30,8 @@ public class Goods {
     @Field(type = FieldType.Long)
     private Long sale;//销量
 
-    @Field(type = FieldType.Long)
-    private Long store;//是否有货
+    @Field(type = FieldType.Boolean)
+    private Boolean store;//是否有货
 
     @Field(type = FieldType.Date)
     private Date createTime;//新品

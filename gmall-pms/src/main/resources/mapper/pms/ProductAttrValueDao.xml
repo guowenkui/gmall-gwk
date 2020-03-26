@@ -14,7 +14,7 @@
         <result property="quickShow" column="quick_show"/>
     </resultMap>
 
-    <select id="querySearchAttrValueBySpuId" resultType="productAttrValueMap">
+    <select id="querySearchAttrValueBySpuId" resultMap="productAttrValueMap">
         SELECT a.*
         FROM
 	       pms_product_attr_value a

@@ -1,8 +1,11 @@
 package com.atguigu.gmall.search.pojo;
 
+import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+
+@Data
 public class SearchAttr {
 
     @Field(type = FieldType.Long)
