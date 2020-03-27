@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("search")
 public class SearchController {
@@ -18,7 +20,7 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping
-    public Resp<Object> search(SearchParam searchParam){
+    public Resp<Object> search(SearchParam searchParam) throws IOException {
         this.searchService.search(searchParam);
         return Resp.ok(null);
     }
