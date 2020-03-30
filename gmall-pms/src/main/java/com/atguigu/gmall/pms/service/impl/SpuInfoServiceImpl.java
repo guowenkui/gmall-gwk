@@ -12,8 +12,10 @@ import com.atguigu.gmall.sms.vo.SkuSaleVO;
 import com.mysql.jdbc.TimeUtil;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -63,6 +65,13 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private GmallSmsClient gmallSmsClient;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
+
+    @Value("${item.rabbitmq.exchange}")
+    private String EXCHANGE_NAME;
 
 
     @Override
@@ -125,6 +134,11 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
 //        int i=1/0;
 
+        sendMsg("insert",spuId);
+    }
+
+    private void sendMsg(String type,Long spuId){
+        this.amqpTemplate.convertAndSend(EXCHANGE_NAME,"item."+type,spuId);
     }
 
     private void saveSkuAndSale(SpuInfoVO spuInfoVO, Long spuId) {

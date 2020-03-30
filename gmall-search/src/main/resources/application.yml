@@ -11,3 +11,9 @@ spring:
       uris: http://127.0.0.1:9200
   jackson:
     default-property-inclusion: non_null
+
+  rabbitmq:
+    host: 127.0.0.1
+    username: guowenkui
+    password: m12345
+    virtual-host: /guowenkui

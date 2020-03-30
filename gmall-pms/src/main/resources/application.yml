@@ -12,8 +12,18 @@ spring:
     password: 12345
   redis:
     host: 127.0.0.1
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guowenkui
+    password: m12345
+    virtual-host: /guowenkui
 mybatis-plus:
   global-config:
     db-config:
       id-type: auto
   mapper-locations: classpath:mapper/pms/**/*.xml
+
+item:
+  rabbitmq:
+    exchange: GMALL-PMS-EXCHANGE
